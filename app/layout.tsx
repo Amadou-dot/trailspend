@@ -15,17 +15,34 @@ export const metadata: Metadata = {
   keywords: ["spending tracker", "subscription manager", "personal finance", "budget", "transactions"],
   authors: [{ name: "Trailspend" }],
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://trailspend.com'),
+  icons: {
+    icon: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+    apple: [
+      { url: '/icon.svg', type: 'image/svg+xml' },
+    ],
+  },
   openGraph: {
     title: "Trailspend - Smart Spending Manager",
     description: "Track your spending, manage subscriptions, and gain insights into your financial habits.",
     url: "https://trailspend.com",
     siteName: "Trailspend",
     type: "website",
+    images: [
+      {
+        url: '/logo.svg',
+        width: 200,
+        height: 200,
+        alt: 'Trailspend Logo',
+      },
+    ],
   },
   twitter: {
     card: "summary_large_image",
     title: "Trailspend - Smart Spending Manager",
     description: "Track your spending, manage subscriptions, and gain insights into your financial habits.",
+    images: ['/logo.svg'],
   },
 };
 
