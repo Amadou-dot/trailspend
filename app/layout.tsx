@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import Link from "next/link";
+import MobileNav from "@/components/MobileNav";
+import { ThemeProvider } from "@/components/theme-provider";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -36,48 +37,31 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} antialiased`}>
-        <div className="min-h-screen bg-background">
-          {/* Navigation */}
-          <nav className="border-b">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-              <div className="flex h-16 items-center justify-between">
-                <div className="flex items-center gap-8">
-                  <Link href="/" className="text-xl font-bold text-primary">
-                    Trailspend
-                  </Link>
-                  <div className="hidden md:flex gap-6">
-                    <Link href="/dashboard" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                      Dashboard
-                    </Link>
-                    <Link href="/recurring" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                      Recurring
-                    </Link>
-                    <Link href="/spending" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                      Spending
-                    </Link>
-                    <Link href="/transactions" className="text-sm font-medium text-muted-foreground hover:text-foreground transition-colors">
-                      Transactions
-                    </Link>
-                  </div>
-                </div>
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="min-h-screen bg-background">
+            {/* Navigation */}
+            <MobileNav />
+          
+            {/* Main Content */}
+            <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+              {children}
+            </main>
+          
+            {/* Footer */}
+            <footer className="border-t mt-auto">
+              <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                <p className="text-center text-sm text-muted-foreground">
+                  © {new Date().getFullYear()} Trailspend. All rights reserved.
+                </p>
               </div>
-            </div>
-          </nav>
-          
-          {/* Main Content */}
-          <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-            {children}
-          </main>
-          
-          {/* Footer */}
-          <footer className="border-t mt-auto">
-            <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-              <p className="text-center text-sm text-muted-foreground">
-                © {new Date().getFullYear()} Trailspend. All rights reserved.
-              </p>
-            </div>
-          </footer>
-        </div>
+            </footer>
+          </div>
+        </ThemeProvider>
       </body>
     </html>
   );
