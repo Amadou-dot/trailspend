@@ -37,7 +37,7 @@ export default function SpendingPeriodSelector({ defaultValue = '30' }: Spending
 
   return (
     <Select value={currentPeriod} onValueChange={handlePeriodChange}>
-      <SelectTrigger className="w-[180px]">
+      <SelectTrigger className="w-full sm:w-[180px]">
         <SelectValue placeholder="Select period" />
       </SelectTrigger>
       <SelectContent>
