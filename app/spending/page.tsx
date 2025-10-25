@@ -82,37 +82,37 @@ export default async function SpendingPage({ searchParams }: SpendingPageProps) 
     .slice(0, 10);
 
   return (
-    <div className="space-y-8">
-      <div className="flex justify-between items-start gap-4">
+    <div className="space-y-6 sm:space-y-8">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-4">
         <div className="flex-1">
-          <h1 className="text-3xl font-bold">Spending Analysis</h1>
-          <p className="text-muted-foreground">Understand where your money goes ({periodLabel})</p>
+          <h1 className="text-2xl sm:text-3xl font-bold">Spending Analysis</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">Understand where your money goes ({periodLabel})</p>
         </div>
         <SpendingPeriodSelector defaultValue="30" />
       </div>
 
       <Tabs defaultValue="merchants" className="space-y-4">
-        <TabsList>
-          <TabsTrigger value="merchants">By Merchant</TabsTrigger>
-          <TabsTrigger value="categories">By Category</TabsTrigger>
+        <TabsList className="grid w-full grid-cols-2 sm:w-auto sm:inline-flex">
+          <TabsTrigger value="merchants" className="text-xs sm:text-sm">By Merchant</TabsTrigger>
+          <TabsTrigger value="categories" className="text-xs sm:text-sm">By Category</TabsTrigger>
         </TabsList>
         
         <TabsContent value="merchants" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Top Merchants</CardTitle>
-              <CardDescription>Your most frequent spending locations</CardDescription>
+              <CardTitle className="text-xl sm:text-2xl">Top Merchants</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Your most frequent spending locations</CardDescription>
             </CardHeader>
             <CardContent>
               {topMerchants.length > 0 ? (
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {topMerchants.map(([merchant, data]) => (
-                    <div key={merchant} className="flex justify-between items-center">
-                      <div>
-                        <p className="font-medium">{merchant}</p>
-                        <p className="text-sm text-muted-foreground">{data.count} transaction{data.count !== 1 ? 's' : ''}</p>
+                    <div key={merchant} className="flex justify-between items-center gap-4">
+                      <div className="min-w-0 flex-1">
+                        <p className="font-medium text-sm sm:text-base truncate">{merchant}</p>
+                        <p className="text-xs sm:text-sm text-muted-foreground">{data.count} transaction{data.count !== 1 ? 's' : ''}</p>
                       </div>
-                      <p className="font-semibold">{formatCurrency(data.total)}</p>
+                      <p className="font-semibold text-sm sm:text-base shrink-0">{formatCurrency(data.total)}</p>
                     </div>
                   ))}
                 </div>
@@ -131,21 +131,21 @@ export default async function SpendingPage({ searchParams }: SpendingPageProps) 
         <TabsContent value="categories" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Spending by Category</CardTitle>
-              <CardDescription>Breakdown of your spending categories</CardDescription>
+              <CardTitle className="text-xl sm:text-2xl">Spending by Category</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">Breakdown of your spending categories</CardDescription>
             </CardHeader>
             <CardContent>
               {topCategories.length > 0 ? (
-                <div className="space-y-4">
+                <div className="space-y-3 sm:space-y-4">
                   {topCategories.map(([category, amount]) => {
                     const percentage = totalSpending > 0 ? ((amount / totalSpending) * 100).toFixed(0) : 0;
                     return (
-                      <div key={category} className="flex justify-between items-center">
-                        <div>
-                          <p className="font-medium">{category}</p>
-                          <p className="text-sm text-muted-foreground">{percentage}% of total</p>
+                      <div key={category} className="flex justify-between items-center gap-4">
+                        <div className="min-w-0 flex-1">
+                          <p className="font-medium text-sm sm:text-base truncate">{category}</p>
+                          <p className="text-xs sm:text-sm text-muted-foreground">{percentage}% of total</p>
                         </div>
-                        <p className="font-semibold">{formatCurrency(amount)}</p>
+                        <p className="font-semibold text-sm sm:text-base shrink-0">{formatCurrency(amount)}</p>
                       </div>
                     );
                   })}

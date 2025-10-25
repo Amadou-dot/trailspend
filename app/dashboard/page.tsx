@@ -119,21 +119,21 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
     .slice(0, 5);
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       <div>
-        <h1 className="text-3xl font-bold">Dashboard</h1>
-        <p className="text-muted-foreground">Overview of your spending and subscriptions</p>
+        <h1 className="text-2xl sm:text-3xl font-bold">Dashboard</h1>
+        <p className="text-sm sm:text-base text-muted-foreground">Overview of your spending and subscriptions</p>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:gap-6 md:grid-cols-2 lg:grid-cols-4">
         <Card className="md:col-span-2">
           <CardHeader className="pb-3">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <CardDescription>Total Spending</CardDescription>
               <SpendingPeriodSelector defaultValue="30" />
             </div>
-            <CardTitle className="text-4xl font-bold">{formatCurrency(totalSpending)}</CardTitle>
-            <p className="text-sm text-muted-foreground">
+            <CardTitle className="text-3xl sm:text-4xl font-bold">{formatCurrency(totalSpending)}</CardTitle>
+            <p className="text-xs sm:text-sm text-muted-foreground">
               {periodLabel} • {recentTransactions.length} transaction{recentTransactions.length !== 1 ? 's' : ''}
             </p>
           </CardHeader>
@@ -142,7 +142,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         <Card>
           <CardHeader className="pb-2">
             <CardDescription>Active Subscriptions</CardDescription>
-            <CardTitle className="text-3xl">{subscriptions.length}</CardTitle>
+            <CardTitle className="text-2xl sm:text-3xl">{subscriptions.length}</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-xs text-muted-foreground">
@@ -154,7 +154,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         <Card>
           <CardHeader className="pb-2">
             <CardDescription>All Transactions</CardDescription>
-            <CardTitle className="text-3xl">{allTransactions.length}</CardTitle>
+            <CardTitle className="text-2xl sm:text-3xl">{allTransactions.length}</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-xs text-muted-foreground">
@@ -164,11 +164,11 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         </Card>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-4 sm:gap-6 md:grid-cols-2">
         <Card>
           <CardHeader className="pb-2">
             <CardDescription>Upcoming Bills</CardDescription>
-            <CardTitle className="text-2xl">{formatCurrency(upcomingBillsTotal)}</CardTitle>
+            <CardTitle className="text-xl sm:text-2xl">{formatCurrency(upcomingBillsTotal)}</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-xs text-muted-foreground">
@@ -180,7 +180,7 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         <Card>
           <CardHeader className="pb-2">
             <CardDescription>Monthly Subscriptions</CardDescription>
-            <CardTitle className="text-2xl">{formatCurrency(monthlySubscriptionTotal)}</CardTitle>
+            <CardTitle className="text-xl sm:text-2xl">{formatCurrency(monthlySubscriptionTotal)}</CardTitle>
           </CardHeader>
           <CardContent>
             <p className="text-xs text-muted-foreground">
@@ -190,27 +190,27 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
         </Card>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
+      <div className="grid gap-4 sm:gap-6 lg:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Recent Transactions</CardTitle>
-            <CardDescription>Your latest spending activity</CardDescription>
+            <CardTitle className="text-xl sm:text-2xl">Recent Transactions</CardTitle>
+            <CardDescription className="text-xs sm:text-sm">Your latest spending activity</CardDescription>
           </CardHeader>
           <CardContent>
             {latestTransactions.length > 0 ? (
               <div className="space-y-3">
                 {latestTransactions.map((t) => (
-                  <div key={t.transactionId} className="flex justify-between items-center">
-                    <div>
-                      <p className="font-medium">{t.merchantName || 'Unknown'}</p>
+                  <div key={t.transactionId} className="flex justify-between items-center gap-3">
+                    <div className="min-w-0 flex-1">
+                      <p className="font-medium text-sm sm:text-base truncate">{t.merchantName || 'Unknown'}</p>
                       <p className="text-xs text-muted-foreground">{formatDate(t.date)}</p>
                     </div>
-                    <Badge variant={t.amount > 0 ? 'destructive' : 'default'}>
+                    <Badge variant={t.amount > 0 ? 'destructive' : 'default'} className="text-xs shrink-0">
                       {formatCurrency(t.amount > 0 ? t.amount : Math.abs(t.amount))}
                     </Badge>
                   </div>
                 ))}
-                <Link href="/transactions" className="text-sm text-primary hover:underline block mt-4">
+                <Link href="/transactions" className="text-xs sm:text-sm text-primary hover:underline block mt-4">
                   View all transactions →
                 </Link>
               </div>
@@ -227,19 +227,19 @@ export default async function DashboardPage({ searchParams }: DashboardPageProps
 
         <Card>
           <CardHeader>
-            <CardTitle>Spending by Category</CardTitle>
-            <CardDescription>Where your money goes</CardDescription>
+            <CardTitle className="text-xl sm:text-2xl">Spending by Category</CardTitle>
+            <CardDescription className="text-xs sm:text-sm">Where your money goes</CardDescription>
           </CardHeader>
           <CardContent>
             {topCategories.length > 0 ? (
               <div className="space-y-3">
                 {topCategories.map(([category, amount]) => (
-                  <div key={category} className="flex justify-between items-center">
-                    <p className="text-sm font-medium">{category}</p>
-                    <p className="text-sm text-muted-foreground">{formatCurrency(amount)}</p>
+                  <div key={category} className="flex justify-between items-center gap-3">
+                    <p className="text-xs sm:text-sm font-medium truncate flex-1">{category}</p>
+                    <p className="text-xs sm:text-sm text-muted-foreground shrink-0">{formatCurrency(amount)}</p>
                   </div>
                 ))}
-                <Link href="/spending" className="text-sm text-primary hover:underline block mt-4">
+                <Link href="/spending" className="text-xs sm:text-sm text-primary hover:underline block mt-4">
                   View detailed breakdown →
                 </Link>
               </div>

@@ -54,41 +54,41 @@ export default async function RecurringPage() {
   }, 0);
 
   return (
-    <div className="space-y-8">
-      <div className="flex justify-between items-center">
+    <div className="space-y-6 sm:space-y-8">
+      <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
         <div>
-          <h1 className="text-3xl font-bold">Recurring Subscriptions</h1>
-          <p className="text-muted-foreground">Track and manage your recurring payments</p>
+          <h1 className="text-2xl sm:text-3xl font-bold">Recurring Subscriptions</h1>
+          <p className="text-sm sm:text-base text-muted-foreground">Track and manage your recurring payments</p>
         </div>
-        <Button>Sync Subscriptions</Button>
+        <Button className="w-full sm:w-auto">Sync Subscriptions</Button>
       </div>
 
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-4 sm:gap-6 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
         {subscriptions.length > 0 ? (
           subscriptions.map((sub) => (
             <Card key={sub.streamId}>
               <CardHeader>
-                <div className="flex justify-between items-start">
-                  <div>
-                    <CardTitle>{sub.merchantName}</CardTitle>
-                    <CardDescription>{sub.category[0] || 'Subscription'}</CardDescription>
+                <div className="flex justify-between items-start gap-2">
+                  <div className="min-w-0 flex-1">
+                    <CardTitle className="text-base sm:text-lg truncate">{sub.merchantName}</CardTitle>
+                    <CardDescription className="text-xs sm:text-sm">{sub.category[0] || 'Subscription'}</CardDescription>
                   </div>
-                  <Badge variant={sub.isActive ? 'default' : 'secondary'}>
+                  <Badge variant={sub.isActive ? 'default' : 'secondary'} className="text-xs shrink-0">
                     {sub.status}
                   </Badge>
                 </div>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2">
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-xs sm:text-sm">
                     <span className="text-muted-foreground">Amount</span>
                     <span className="font-semibold">{formatCurrency(Math.abs(sub.lastAmount))}</span>
                   </div>
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-xs sm:text-sm">
                     <span className="text-muted-foreground">Frequency</span>
                     <span>{getFrequencyLabel(sub.frequency)}</span>
                   </div>
-                  <div className="flex justify-between text-sm">
+                  <div className="flex justify-between text-xs sm:text-sm">
                     <span className="text-muted-foreground">Last Payment</span>
                     <span>{formatDate(sub.lastDate)}</span>
                   </div>
@@ -112,12 +112,12 @@ export default async function RecurringPage() {
 
       <Card>
         <CardHeader>
-          <CardTitle>Monthly Summary</CardTitle>
-          <CardDescription>Total recurring charges per month (estimated)</CardDescription>
+          <CardTitle className="text-xl sm:text-2xl">Monthly Summary</CardTitle>
+          <CardDescription className="text-xs sm:text-sm">Total recurring charges per month (estimated)</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="text-3xl font-bold">{formatCurrency(monthlyTotal)}</div>
-          <p className="text-sm text-muted-foreground mt-2">
+          <div className="text-2xl sm:text-3xl font-bold">{formatCurrency(monthlyTotal)}</div>
+          <p className="text-xs sm:text-sm text-muted-foreground mt-2">
             Across {subscriptions.length} active subscription{subscriptions.length !== 1 ? 's' : ''}
           </p>
         </CardContent>
