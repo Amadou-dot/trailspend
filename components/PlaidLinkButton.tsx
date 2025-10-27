@@ -122,6 +122,7 @@ export default function PlaidLinkButton({ userId, onSuccess }: PlaidLinkButtonPr
       disabled={!ready || loading || isCreatingToken}
       size="lg"
       className="w-full sm:w-auto"
+      data-plaid-link-button
     >
       {loading ? 'Connecting...' : isCreatingToken ? 'Initializing...' : 'Link Bank Account'}
     </Button>
