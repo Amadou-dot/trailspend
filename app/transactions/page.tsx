@@ -8,6 +8,8 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
+import { auth } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
 import connectDB from '@/lib/db';
 import User from '@/lib/models/User';
 import Transaction from '@/lib/models/Transaction';
@@ -15,12 +17,19 @@ import { formatCurrency, formatDate } from '@/lib/helpers';
 import Link from 'next/link';
 
 export default async function TransactionsPage() {
+  // Get the authenticated user's Clerk ID
+  const { userId: clerkUserId } = await auth();
+  
+  if (!clerkUserId) {
+    redirect('/sign-in');
+  }
+
   await connectDB();
 
-  // Find the demo user
-  const user = await User.findOne({ email: 'user-demo-123' });
+  // Find the user by their Clerk ID
+  const user = await User.findOne({ clerkId: clerkUserId });
 
-  // Get all transactions for demo user, sorted by date
+  // Get all transactions for user, sorted by date
   const transactions = user 
     ? await Transaction.find({ userId: user._id })
         .sort({ date: -1 })
