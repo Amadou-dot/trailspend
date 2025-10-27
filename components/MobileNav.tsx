@@ -1,15 +1,18 @@
 'use client';
 
-import Link from 'next/link';
+import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+import { Moon } from 'lucide-react';
+import { useTheme } from 'next-themes';
 import Image from 'next/image';
-import { useState } from 'react';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useState } from 'react';
 import { Button } from './ui/button';
-import ThemeToggle from './ThemeToggle';
 
 export default function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
+  const { theme, setTheme } = useTheme();
 
   const links = [
     { href: '/dashboard', label: 'Dashboard' },
@@ -25,10 +28,10 @@ export default function MobileNav() {
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <Image 
-              src="/icon.svg" 
-              alt="Trailspend Logo" 
-              width={32} 
+            <Image
+              src="/icon.svg"
+              alt="Trailspend Logo"
+              width={32}
               height={32}
               className="w-8 h-8"
             />
@@ -41,21 +44,66 @@ export default function MobileNav() {
               <Link
                 key={link.href}
                 href={link.href}
-                className={`text-sm font-medium transition-colors ${
-                  isActive(link.href)
-                    ? 'text-foreground'
-                    : 'text-muted-foreground hover:text-foreground'
-                }`}
+                className={`text-sm font-medium transition-colors ${isActive(link.href)
+                  ? 'text-foreground'
+                  : 'text-muted-foreground hover:text-foreground'
+                  }`}
               >
                 {link.label}
               </Link>
             ))}
-            <ThemeToggle />
+            <SignedOut>
+              <Link href="/sign-in">
+                <Button variant="default" size="sm">Sign In</Button>
+              </Link>
+            </SignedOut>
+            <SignedIn>
+              <UserButton
+                appearance={{
+                  elements: {
+                    avatarBox: "w-8 h-8"
+                  }
+                }}
+              >
+                <UserButton.MenuItems>
+
+                  <UserButton.Action
+                    label="Toggle theme"
+                    labelIcon={<Moon />}
+                    onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  />
+                  <UserButton.Action label="manageAccount" />
+                </UserButton.MenuItems>
+              </UserButton>
+            </SignedIn>
           </div>
 
           {/* Mobile Menu Controls */}
           <div className="md:hidden flex items-center gap-2">
-            <ThemeToggle />
+            <SignedOut>
+              <Link href="/sign-in">
+                <Button variant="default" size="sm">Sign In</Button>
+              </Link>
+            </SignedOut>
+            <SignedIn>
+              <UserButton
+                appearance={{
+                  elements: {
+                    avatarBox: "w-8 h-8"
+                  }
+                }}
+              >
+                <UserButton.MenuItems>
+
+                  <UserButton.Action
+                    label="Toggle theme"
+                    labelIcon={<Moon />}
+                    onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
+                  />
+                  <UserButton.Action label="manageAccount" />
+                </UserButton.MenuItems>
+              </UserButton>
+            </SignedIn>
             <Button
               variant="ghost"
               size="icon"
@@ -89,11 +137,10 @@ export default function MobileNav() {
                 key={link.href}
                 href={link.href}
                 onClick={() => setIsOpen(false)}
-                className={`block px-4 py-2 rounded-md text-sm font-medium transition-colors ${
-                  isActive(link.href)
-                    ? 'bg-primary text-primary-foreground'
-                    : 'text-muted-foreground hover:bg-accent hover:text-foreground'
-                }`}
+                className={`block px-4 py-2 rounded-md text-sm font-medium transition-colors ${isActive(link.href)
+                  ? 'bg-primary text-primary-foreground'
+                  : 'text-muted-foreground hover:bg-accent hover:text-foreground'
+                  }`}
               >
                 {link.label}
               </Link>

@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import MobileNav from "@/components/MobileNav";
 import { ThemeProvider } from "@/components/theme-provider";
+import { ClerkProvider } from "@clerk/nextjs";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -52,34 +53,36 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} antialiased`}>
-        <ThemeProvider
-          attribute="class"
-          defaultTheme="system"
-          enableSystem
-          disableTransitionOnChange
-        >
-          <div className="min-h-screen bg-background">
-            {/* Navigation */}
-            <MobileNav />
-          
-            {/* Main Content */}
-            <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
-              {children}
-            </main>
-          
-            {/* Footer */}
-            <footer className="border-t mt-auto">
-              <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
-                <p className="text-center text-sm text-muted-foreground">
-                  © {new Date().getFullYear()} Trailspend. All rights reserved.
-                </p>
-              </div>
-            </footer>
-          </div>
-        </ThemeProvider>
-      </body>
-    </html>
+    <ClerkProvider afterSignOutUrl="/sign-in">
+      <html lang="en" suppressHydrationWarning>
+        <body className={`${inter.variable} antialiased`}>
+          <ThemeProvider
+            attribute="class"
+            defaultTheme="system"
+            enableSystem
+            disableTransitionOnChange
+          >
+            <div className="min-h-screen bg-background">
+              {/* Navigation */}
+              <MobileNav />
+            
+              {/* Main Content */}
+              <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                {children}
+              </main>
+            
+              {/* Footer */}
+              <footer className="border-t mt-auto">
+                <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">
+                  <p className="text-center text-sm text-muted-foreground">
+                    © {new Date().getFullYear()} Trailspend. All rights reserved.
+                  </p>
+                </div>
+              </footer>
+            </div>
+          </ThemeProvider>
+        </body>
+      </html>
+    </ClerkProvider>
   );
 }
