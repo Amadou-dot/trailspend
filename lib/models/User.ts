@@ -1,6 +1,7 @@
 import mongoose, { Schema, Model, models } from 'mongoose';
 
 export interface IUser {
+  clerkId: string;
   email: string;
   name?: string;
   plaidAccessToken?: string; // Encrypted
@@ -15,6 +16,12 @@ export interface IUser {
 
 const UserSchema = new Schema<IUser>(
   {
+    clerkId: {
+      type: String,
+      required: true,
+      unique: true,
+      trim: true,
+    },
     email: {
       type: String,
       required: true,
@@ -53,6 +60,7 @@ const UserSchema = new Schema<IUser>(
 );
 
 // Indexes for better query performance
+UserSchema.index({ clerkId: 1 });
 UserSchema.index({ email: 1 });
 UserSchema.index({ plaidItemId: 1 });
 
