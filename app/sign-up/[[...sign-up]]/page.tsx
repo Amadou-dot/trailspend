@@ -1,10 +1,10 @@
 "use client";
 
-import { SignIn } from "@clerk/nextjs";
+import { SignUp } from "@clerk/nextjs";
 import { dark } from "@clerk/themes";
 import { useTheme } from "next-themes";
 
-export default function SignInPage() {
+export default function SignUpPage() {
   const { resolvedTheme } = useTheme();
 
   return (
@@ -12,13 +12,13 @@ export default function SignInPage() {
       <div className="w-full max-w-md">
         <div className="mb-8 text-center">
           <h1 className="text-3xl font-bold text-foreground mb-2">
-            Welcome to Trailspend
+            Join Trailspend
           </h1>
           <p className="text-muted-foreground">
-            Sign in to track your spending and manage subscriptions
+            Create an account to start tracking your spending and subscriptions
           </p>
         </div>
-        <SignIn 
+        <SignUp 
           appearance={{
             baseTheme: resolvedTheme === "dark" ? dark : undefined,
             elements: {

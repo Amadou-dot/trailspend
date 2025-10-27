@@ -20,7 +20,7 @@ export async function POST(request: NextRequest) {
     await connectDB();
 
     // Get user with access token
-    const user = await User.findOne({ email: userId }).select('+plaidAccessToken');
+    const user = await User.findOne({ clerkId: userId }).select('+plaidAccessToken');
 
     if (!user || !user.plaidAccessToken) {
       return NextResponse.json(

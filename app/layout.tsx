@@ -1,9 +1,9 @@
+import ConditionalNav from "@/components/ConditionalNav";
+import { ThemeProvider } from "@/components/theme-provider";
+import { ClerkProvider } from "@clerk/nextjs";
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import MobileNav from "@/components/MobileNav";
-import { ThemeProvider } from "@/components/theme-provider";
-import { ClerkProvider } from "@clerk/nextjs";
 
 const inter = Inter({
   variable: "--font-inter",
@@ -15,7 +15,7 @@ export const metadata: Metadata = {
   description: "Track your spending, manage subscriptions, and gain insights into your financial habits with Trailspend.",
   keywords: ["spending tracker", "subscription manager", "personal finance", "budget", "transactions"],
   authors: [{ name: "Trailspend" }],
-  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'https://trailspend.com'),
+  metadataBase: 'https://trailspend.com',
   icons: {
     icon: [
       { url: '/icon.svg', type: 'image/svg+xml' },
@@ -53,7 +53,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider afterSignOutUrl="/sign-in">
+    <ClerkProvider afterSignOutUrl="/sign-in" signInUrl="/sign-in" signUpUrl="/sign-up">
       <html lang="en" suppressHydrationWarning>
         <body className={`${inter.variable} antialiased`}>
           <ThemeProvider
@@ -63,14 +63,14 @@ export default function RootLayout({
             disableTransitionOnChange
           >
             <div className="min-h-screen bg-background">
-              {/* Navigation */}
-              <MobileNav />
-            
+              {/* Navigation - hidden on auth pages */}
+              <ConditionalNav />
+
               {/* Main Content */}
               <main className="container mx-auto px-4 sm:px-6 lg:px-8 py-8">
                 {children}
               </main>
-            
+
               {/* Footer */}
               <footer className="border-t mt-auto">
                 <div className="container mx-auto px-4 sm:px-6 lg:px-8 py-6">

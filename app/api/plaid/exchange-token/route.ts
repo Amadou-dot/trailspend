@@ -55,7 +55,7 @@ export async function POST(request: NextRequest) {
     await connectDB();
 
     const user = await User.findOneAndUpdate(
-      { email: userId }, // Using email as userId for now
+      { clerkId: userId },
       {
         plaidAccessToken: encryptedAccessToken,
         plaidItemId: itemId,
@@ -63,8 +63,15 @@ export async function POST(request: NextRequest) {
         plaidInstitutionName: institutionName,
         accountsLinked: true,
       },
-      { upsert: true, new: true }
+      { new: true }
     );
+
+    if (!user) {
+      return NextResponse.json(
+        { error: 'User not found. Please ensure you are signed in.' },
+        { status: 404 }
+      );
+    }
 
     return NextResponse.json({
       success: true,
