@@ -1,6 +1,7 @@
 'use client';
 
 import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs';
+import { dark } from '@clerk/themes';
 import { Moon } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import Image from 'next/image';
@@ -12,7 +13,7 @@ import { Button } from './ui/button';
 export default function MobileNav() {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
-  const { theme, setTheme } = useTheme();
+  const { theme, setTheme, resolvedTheme } = useTheme();
 
   const links = [
     { href: '/dashboard', label: 'Dashboard' },
@@ -60,6 +61,7 @@ export default function MobileNav() {
             <SignedIn>
               <UserButton
                 appearance={{
+                  baseTheme: resolvedTheme === "dark" ? dark : undefined,
                   elements: {
                     avatarBox: "w-8 h-8"
                   }
@@ -88,6 +90,7 @@ export default function MobileNav() {
             <SignedIn>
               <UserButton
                 appearance={{
+                  baseTheme: resolvedTheme === "dark" ? dark : undefined,
                   elements: {
                     avatarBox: "w-8 h-8"
                   }
