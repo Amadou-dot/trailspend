@@ -1,6 +1,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
+import { auth } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
 import connectDB from '@/lib/db';
 import User from '@/lib/models/User';
 import RecurringSubscription from '@/lib/models/RecurringSubscription';
@@ -8,10 +10,17 @@ import { formatCurrency, formatDate, getFrequencyLabel } from '@/lib/helpers';
 import Link from 'next/link';
 
 export default async function RecurringPage() {
+  // Get the authenticated user's Clerk ID
+  const { userId: clerkUserId } = await auth();
+  
+  if (!clerkUserId) {
+    redirect('/sign-in');
+  }
+
   await connectDB();
 
-  // Find the demo user
-  const user = await User.findOne({ email: 'user-demo-123' });
+  // Find the user by their Clerk ID
+  const user = await User.findOne({ clerkId: clerkUserId });
 
   // Get all active subscriptions (OUTFLOW only = expenses/subscriptions)
   const subscriptions = user

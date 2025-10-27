@@ -1,6 +1,8 @@
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import Link from 'next/link';
+import { auth } from '@clerk/nextjs/server';
+import { redirect } from 'next/navigation';
 import connectDB from '@/lib/db';
 import User from '@/lib/models/User';
 import Transaction from '@/lib/models/Transaction';
@@ -13,13 +15,20 @@ interface DashboardPageProps {
 }
 
 export default async function DashboardPage({ searchParams }: DashboardPageProps) {
+  // Get the authenticated user's Clerk ID
+  const { userId: clerkUserId } = await auth();
+  
+  if (!clerkUserId) {
+    redirect('/sign-in');
+  }
+
   await connectDB();
 
   // Await searchParams in Next.js 15+
   const params = await searchParams;
 
-  // Find the demo user
-  const user = await User.findOne({ email: 'user-demo-123' });
+  // Find the user by their Clerk ID
+  const user = await User.findOne({ clerkId: clerkUserId });
   
   if (!user) {
     return (
