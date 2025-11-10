@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql" // Vercel Postgres is a PostgreSQL database
+  url      = env("DATABASE_URL") // This will come from Vercel
+}
+
+// -------------------------------------------------
+// AUTH & USER MODEL
+// -------------------------------------------------
+// We'll expand this when we add NextAuth.js
+model User {
+  id    String @id @default(cuid())
+  email String @unique
+
+  // Relations
+  transactions Transaction[]
+  categories   Category[]
+}
+
+// -------------------------------------------------
+// CATEGORY MODEL
+// -------------------------------------------------
+model Category {
+  id   String @id @default(cuid())
+  name String
+
+  // Relations
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  transactions Transaction[]
+
+  // A user can't have two categories with the same name
+  @@unique([userId, name])
+}
+
+// -------------------------------------------------
+// TRANSACTION MODEL
+// -------------------------------------------------
+model Transaction {
+  id          String   @id @default(cuid())
+  date        DateTime
+  description String   // Raw text from the CSV
+  amount      Float
+  vendor      String?  // The "clean" name we get from AI
+
+  // The field for our subscription logic
+  isSubscription Boolean @default(false)
+
+  // Relations
+  user   User   @relation(fields: [userId], references: [id])
+  userId String
+
+  category   Category? @relation(fields: [categoryId], references: [id])
+  categoryId String?
+}
