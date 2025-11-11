@@ -1,8 +1,9 @@
 "use client"
 
 import Link from "next/link"
-import { Menu } from "lucide-react"
+import { Menu, Moon, Sun, Monitor } from "lucide-react"
 import { useSession, signIn, signOut } from "next-auth/react"
+import { useTheme } from "next-themes"
 
 import { Button } from "@/components/ui/button"
 import {
@@ -26,22 +27,27 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
+  DropdownMenuSub,
+  DropdownMenuSubContent,
+  DropdownMenuSubTrigger,
 } from "@/components/ui/dropdown-menu"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Separator } from "@/components/ui/separator"
 
 export default function Navbar() {
   const { data: session, status } = useSession()
+  const { setTheme, theme } = useTheme()
 
   const navItems = [
     { href: "/", label: "Dashboard" },
-    { href: "/expenses", label: "Expenses" },
+    { href: "/import", label: "Import" },
+    { href: "/spending", label: "Spending" },
     { href: "/budget", label: "Budget" },
     { href: "/reports", label: "Reports" },
   ]
 
   return (
-    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+    <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-backdrop-filter:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
         {/* Logo */}
         <Link href="/" className="flex items-center space-x-2">
@@ -55,7 +61,9 @@ export default function Navbar() {
               <NavigationMenuList>
                 {navItems.map((item) => (
                   <NavigationMenuItem key={item.href}>
-                    <Link href={item.href} legacyBehavior passHref>
+                    <Link href={item.href}>
+                      {/* @next-codemod-error This Link previously used the now removed `legacyBehavior` prop, and has a child that might not be an anchor. The codemod bailed out of lifting the child props to the Link. Check that the child component does not render an anchor, and potentially move the props manually to Link. */
+                      }
                       <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                         {item.label}
                       </NavigationMenuLink>
@@ -99,6 +107,28 @@ export default function Navbar() {
                 <DropdownMenuItem asChild>
                   <Link href="/settings">Settings</Link>
                 </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuSub>
+                  <DropdownMenuSubTrigger>
+                    <Sun className="mr-2 h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
+                    <Moon className="absolute mr-2 h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+                    <span>Theme</span>
+                  </DropdownMenuSubTrigger>
+                  <DropdownMenuSubContent>
+                    <DropdownMenuItem onClick={() => setTheme("light")}>
+                      <Sun className="mr-2 h-4 w-4" />
+                      <span>Light</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setTheme("dark")}>
+                      <Moon className="mr-2 h-4 w-4" />
+                      <span>Dark</span>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setTheme("system")}>
+                      <Monitor className="mr-2 h-4 w-4" />
+                      <span>System</span>
+                    </DropdownMenuItem>
+                  </DropdownMenuSubContent>
+                </DropdownMenuSub>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={() => signOut()}>
                   Log out
@@ -167,6 +197,39 @@ export default function Navbar() {
                         Settings
                       </Link>
                       <Separator />
+                      <div className="space-y-2">
+                        <p className="px-3 text-sm font-medium text-muted-foreground">Theme</p>
+                        <div className="grid grid-cols-3 gap-2">
+                          <Button
+                            variant={theme === "light" ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => setTheme("light")}
+                            className="w-full"
+                          >
+                            <Sun className="mr-2 h-4 w-4" />
+                            Light
+                          </Button>
+                          <Button
+                            variant={theme === "dark" ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => setTheme("dark")}
+                            className="w-full"
+                          >
+                            <Moon className="mr-2 h-4 w-4" />
+                            Dark
+                          </Button>
+                          <Button
+                            variant={theme === "system" ? "default" : "outline"}
+                            size="sm"
+                            onClick={() => setTheme("system")}
+                            className="w-full"
+                          >
+                            <Monitor className="mr-2 h-4 w-4" />
+                            System
+                          </Button>
+                        </div>
+                      </div>
+                      <Separator />
                       <Button onClick={() => signOut()} variant="outline" className="w-full">
                         Log out
                       </Button>
@@ -184,5 +247,5 @@ export default function Navbar() {
         </div>
       </div>
     </header>
-  )
+  );
 }
