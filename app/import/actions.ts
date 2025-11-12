@@ -48,14 +48,33 @@ export async function importTransactions(
 
   const fileText = await file.text()
 
-  // 1. Parse the CSV
+  // Debug: Log first 200 chars to see the actual format
+  console.log("File text preview:", fileText.substring(0, 200))
+
+  // 1. Parse the CSV (auto-detect delimiter: comma or tab)
   const parseResult = Papa.parse(fileText, {
     header: true,
     skipEmptyLines: true,
+    delimiter: "", // Auto-detect delimiter (handles CSV and TSV)
+    delimitersToGuess: [',', '\t', '|', ';'],
+    transformHeader: (header) => header.trim(), // Trim whitespace from headers
   })
 
-  if (parseResult.errors.length > 0 || !parseResult.data.length) {
-    return { error: "Error parsing CSV file." }
+  console.log("Parse result meta:", parseResult.meta)
+  console.log("Parse errors:", parseResult.errors)
+  console.log("Data rows:", parseResult.data.length)
+  console.log("Headers:", parseResult.meta.fields)
+
+  // Filter out only critical errors (not field mismatch warnings)
+  const criticalErrors = parseResult.errors.filter(
+    (error) => error.code !== "TooManyFields" && error.code !== "TooFewFields"
+  )
+
+  if (criticalErrors.length > 0 || !parseResult.data.length) {
+    console.error("Critical parse errors:", criticalErrors)
+    return { 
+      error: `Error parsing CSV file. Errors: ${JSON.stringify(criticalErrors.slice(0, 3))}` 
+    }
   }
 
   // 2. Auto-detect the schema
@@ -65,7 +84,8 @@ export async function importTransactions(
   const isChecking = headers.includes("Posting Date")
 
   if (!isCreditCard && !isChecking) {
-    return { error: "Unknown CSV format. Headers do not match." }
+    console.error("Unknown headers:", headers)
+    return { error: `Unknown CSV format. Headers found: ${headers.join(", ")}` }
   }
 
   // 3. Process rows one-by-one (smarter, not faster)
@@ -96,9 +116,17 @@ export async function importTransactions(
         normalized.amount = tx.Amount // Will be negative for debits
       }
 
+      // Validate date
+      if (isNaN(normalized.date.getTime())) {
+        console.error("Invalid date in row:", row)
+        skippedCount++
+        continue
+      }
+
       // --- b. Filter Out Noise ---
       // We only care about SPENDING. Credits/payments are not "spending".
       if (normalized.amount >= 0) {
+        skippedCount++
         continue
       }
 
